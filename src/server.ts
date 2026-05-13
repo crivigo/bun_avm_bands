@@ -26,7 +26,12 @@ export const creareServer = () => {
             if (url.pathname === SERVER_CONFIG.path as string) {
                 return engineFetch(req, server);
             }
-            return new Response(`<html><body><h1>Hola mundo</h1></body></html>`, {
+            // return new Response(`<html><body><h1>Hola mundo</h1></body></html>`, {
+            //     headers: {
+            //         "Content-Type": "text/html; charset=utf-8"
+            //     }
+            // });
+            return new Response(Bun.file("./public/index.html"), {
                 headers: {
                     "Content-Type": "text/html; charset=utf-8"
                 }
