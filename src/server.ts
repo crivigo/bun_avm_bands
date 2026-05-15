@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import {Server as Engine} from "@socket.io/bun-engine";
 
 import { SERVER_CONFIG } from "./config/server-config";
+import { bandsService } from "./services/bands.services";
 
 export const creareServer = () => {
 
@@ -20,7 +21,28 @@ export const creareServer = () => {
      socket.emit("saludo", "Hola desde el servidor");
 
      socket.on("chat", (msg)=> io.emit("chat", msg));
-})
+
+     socket.emit("BANDS_LIST", bandsService.obtinereBands());
+
+     socket.on("ADD_BAND", (payload: { nomen: string }) => {
+            if (payload.nomen.trim().length === 0) return;
+            const band = bandsService.addereBand(payload.nomen);
+            io.emit("BANDS_LIST", bandsService.obtinereBands());
+        });
+
+    socket.on("VOTE_BAND", (payload: { id: string }) => {
+            const band = bandsService.addereVotumBand(payload.id);
+            if (band) {
+                io.emit("BANDS_LIST", bandsService.obtinereBands());
+            }
+        });
+
+    socket.on("DELETE_BAND", (payload: { id: string }) => {
+            const success = bandsService.delereBand(payload.id);
+            if (success) {
+                io.emit("BANDS_LIST", bandsService.obtinereBands());
+            }
+    });
 
     const { fetch : engineFetch, websocket} = engine.handler();
 
