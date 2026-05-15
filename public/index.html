@@ -35,6 +35,14 @@
         socket.on("saludo", (payload) => {
             console.log("Mensaje del servidor:", payload);
         });
+
+        socket.on("chat", (msg) => {
+            console.log("Mensaje de chat recibido:", msg);
+        });
+
+        socket.on("disconnect", () => {
+            console.log("Desconectado del servidor con ID:", socket.id);
+        });
         </script>
 </body>
 </html>
